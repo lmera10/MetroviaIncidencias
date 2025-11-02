@@ -8,6 +8,7 @@ from app.models.database import Database, IncidenciaOperativa
 from app.services.report_generator import ReportGenerator
 from app.models.schemas import EstadisticasResponse
 
+
 router = APIRouter(prefix="/reports", tags=["reports"])
 db = Database()
 
