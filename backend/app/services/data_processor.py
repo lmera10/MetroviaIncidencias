@@ -1,21 +1,15 @@
 import pandas as pd
 from datetime import datetime, time
 from typing import Dict, Any
+from app.config import settings
 
 class DataProcessor:
     def __init__(self):
-        self.empresas_mapping = {
-            'lmera@consorciostg.com.ec': 'STG',
-            'mlopez@consorciostg.com.ec': 'STG',
-            'jmoran@consorciostg.com.ec': 'STG',
-            'mleon@consorciostg.com.ec': 'STG',
-            'jmadero@consorciostg.com.ec': 'STG',
-            'jpaz@consorciostg.com.ec': 'STG'
-        }
+        self.empresas_mapping = settings.EMPRESAS_MAPPING
         
         # Lista de columnas que pueden contener tiempo
         self.columnas_tiempo = [
-            'Hora_programada', 'Hora_real', 'Ciclo', 'Hora_de_incidencia'
+            'hora_programada', 'hora_real', 'ciclo', 'hora_de_incidencia'
         ]
     
     def determinar_tipo_dia(self, fecha: datetime) -> str:
@@ -123,7 +117,7 @@ class DataProcessor:
                 if key in self.columnas_tiempo:
                     datos_limpios[key] = self.convertir_tiempo_a_string(value)
                 else:
-                    datos_limpios[key] = value
+                    datos_limpios[key].lower() if isinstance(value, str) else value
         
         return datos_limpios
     
@@ -133,7 +127,7 @@ class DataProcessor:
         fila_limpia = self.limpiar_datos(fila)
         
         # Procesar fecha
-        fecha = fila_limpia.get('Fecha')
+        fecha = fila_limpia.get('fecha')
         fecha_obj = None
         
         if isinstance(fecha, str):
@@ -153,7 +147,7 @@ class DataProcessor:
         resultado = fila_limpia.copy()
         
         # Asegurar que Fecha sea datetime
-        resultado['Fecha'] = fecha_obj
+        resultado['fecha'] = fecha_obj
         
         # Agregar campos derivados
         if fecha_obj:
@@ -161,7 +155,7 @@ class DataProcessor:
         else:
             resultado['tipo_dia'] = 'No definido'
             
-        resultado['turno'] = self.determinar_turno(fila_limpia.get('Hora_programada', ''))
-        resultado['empresa'] = self.extraer_empresa(fila_limpia.get('Operador', ''))
+        resultado['turno'] = self.determinar_turno(fila_limpia.get('hora_programada', ''))
+        resultado['empresa'] = self.extraer_empresa(fila_limpia.get('operador', ''))
         
         return resultado

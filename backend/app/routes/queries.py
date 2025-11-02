@@ -2,11 +2,17 @@ from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 from sqlalchemy import func, extract
 from datetime import datetime
-
+from django.http import JsonResponse
 from app.models.database import Database, IncidenciaOperativa
 
 router = APIRouter(prefix="/queries", tags=["queries"])
 db = Database()
+
+def test_endpoint(request):
+    data = {
+        "mensaje": "API funcionando correctamente"
+    }
+    return JsonResponse(data)
 
 def get_db():
     database = db.get_session()
@@ -44,17 +50,17 @@ async def get_incidencias(
     # Filtros
     if fecha_inicio and fecha_fin:
         query = query.filter(
-            IncidenciaOperativa.Fecha.between(fecha_inicio, fecha_fin)
+            IncidenciaOperativa.fecha.between(fecha_inicio, fecha_fin)
         )
     
     if troncal:
-        query = query.filter(IncidenciaOperativa.Troncal == troncal)
+        query = query.filter(IncidenciaOperativa.troncal == troncal)
     
     if empresa:
         query = query.filter(IncidenciaOperativa.empresa == empresa)
     
     if tipo_incidencia:
-        query = query.filter(IncidenciaOperativa.Incidencia_primaria.contains(tipo_incidencia))
+        query = query.filter(IncidenciaOperativa.incidencia_primaria.contains(tipo_incidencia))
     
     resultados = query.all()
     
@@ -73,7 +79,7 @@ async def get_estadisticas_diarias(
         func.count(IncidenciaOperativa.id).label('total'),
         IncidenciaOperativa.turno
     ).filter(
-        func.date(IncidenciaOperativa.Fecha) == fecha
+        func.date(IncidenciaOperativa.fecha) == fecha
     ).group_by(IncidenciaOperativa.turno).all()
     
     return {
@@ -89,10 +95,10 @@ async def get_tendencias_mensuales(
     db_session: Session = Depends(get_db)
 ):
     tendencias = db_session.query(
-        extract('month', IncidenciaOperativa.Fecha).label('mes'),
+        extract('month', IncidenciaOperativa.fecha).label('mes'),
         func.count(IncidenciaOperativa.id).label('total')
     ).filter(
-        extract('year', IncidenciaOperativa.Fecha) == año
+        extract('year', IncidenciaOperativa.fecha) == año
     ).group_by('mes').order_by('mes').all()
     
     return {

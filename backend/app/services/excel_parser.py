@@ -9,23 +9,23 @@ class ExcelParser:
     def mapear_columnas(self, df: pd.DataFrame) -> pd.DataFrame:
         """Mapea los nombres de columnas del Excel al formato de la base de datos"""
         mapeo_columnas = {
-            'Fecha': 'Fecha',
-            'Troncal': 'Troncal', 
-            'Código de Ruta': 'Codigo_de_Ruta',
-            'Ruta': 'Ruta',
-            'Bus': 'Bus',
-            'Bus de cambio': 'Bus_de_cambio',
-            'Hora programada': 'Hora_programada',
-            'Hora real': 'Hora_real', 
-            'Ciclo': 'Ciclo',
-            'Hora de incidencia': 'Hora_de_incidencia',
-            'Parada': 'Parada',
-            'Incidencia primaria': 'Incidencia_primaria',
-            'Incidencia secundaria': 'Incidencia_secundaria',
-            'Código de conductor': 'Codigo_de_conductor',
-            'Conductor': 'Conductor',
-            'Operador': 'Operador',
-            'Observaciones': 'Observaciones'
+            'Fecha': 'fecha',
+            'Troncal': 'troncal', 
+            'Código de Ruta': 'codigo_de_ruta',
+            'Ruta': 'ruta',
+            'Bus': 'bus',
+            'Bus de cambio': 'bus_de_cambio',
+            'Hora programada': 'hora_programada',
+            'Hora real': 'hora_real', 
+            'Ciclo': 'ciclo',
+            'Hora de incidencia': 'hora_de_incidencia',
+            'Parada': 'parada',
+            'Incidencia primaria': 'incidencia_primaria',
+            'Incidencia secundaria': 'incidencia_secundaria',
+            'Código de conductor': 'codigo_de_conductor',
+            'Conductor': 'conductor',
+            'Operador': 'operador',
+            'Observaciones': 'observaciones'
         }
         
         # Renombrar columnas
